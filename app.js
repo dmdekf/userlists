@@ -48,6 +48,29 @@ app.post('/topic/add', (req, res)=>{
     })
 
 })
+
+app.get(['/topic/:id/edit'], function(req, res){// 수정기능
+    var sql = 'SELECT id,title FROM topic';    // 일단, 글 목록을 불러온다.(edit페이지에도 글목록은 항상 존재)
+    db.query(sql, function(err, results){
+      var id = req.params.id; // request받은 id값
+      if(id){
+        var sql = 'SELECT * FROM topic WHERE id=?';// id값을 통하여 수정하려고 하는 특정 데이터만 불러온다.
+        db.query(sql, [id], function(err, result) {//[id] : 사용자로부터 받은 id
+          if(err) {
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+          } else {
+            res.render('edit', {topics : results, topic : result[0] });//topic은 배열안에 담긴 객체로 들어오기 때문에, topic[0]으로 데이터를 객체만 전달한다.(전달한 데이터를 통해서 현재 수정하려고 하는 데이터를 화면에 뿌려준다.)
+          }
+        });
+      } else {//id가 없을 경우 반환한다.
+        console.log(err);
+        res.send('There is no id.');
+      }
+    });
+ });
+
+
 // const router = require('./routes')(app)
 const urlPort = process.env.PORT || 5000;
 app.listen(urlPort, ()=>{
