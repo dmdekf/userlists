@@ -26,8 +26,27 @@ app.get('/topic/add', (rep, res)=>{
             res.status(500).send("Internel Sever Error.")
         }
         console.log(result)
-        res.render('add.ejs',{topics :result})
+        res.render('add',{topics :result})
+        // res.send(result) data를 보낼 수 있는 명령.
     })
+})
+
+app.post('/topic/add', (req, res)=>{
+    console.log(req.body);
+    var title = req.body.title;
+    var description = req.body.description;
+    var author = req.body.author;
+    var sql = 'INSERT INTO topic (title, description, author) VALUES(?, ?, ?);'
+    var params = [title, description, author];
+    db.query(sql, params, (err, result)=>{
+        if(err){
+            console.log(err)
+            res.status(500).send("Internel Sever Error.")
+        }
+        console.log('Success.')
+        res.redirect(`/topic/${result.insertId}`)
+    })
+
 })
 // const router = require('./routes')(app)
 const urlPort = process.env.PORT || 5000;
