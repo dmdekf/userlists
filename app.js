@@ -13,7 +13,7 @@ const db = mysql.createConnection({
 db.connect()
 
 
-app.set('views', __dirname+'views')
+app.set('views', __dirname+'/views')
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile)
 app.use(bodyParser.urlencoded({extended:false}))
@@ -26,7 +26,7 @@ app.get('/topic/add', (rep, res)=>{
             res.status(500).send("Internel Sever Error.")
         }
         console.log(result)
-        res.send(result)
+        res.render('add.ejs',{topics :result})
     })
 })
 // const router = require('./routes')(app)
